@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -26,8 +26,8 @@ export class PostsController {
     description: "Returns status code 201 if blog post is created successfully"
   })
   @Post()
-  public createPost(@Body() createPost: CreatePostDto) {
-    console.log(createPost)
+  public createPost(@Body() createPostDto: CreatePostDto) {
+    return this.postsService.create(createPostDto)
   }
 
   @ApiOperation({
@@ -40,5 +40,10 @@ export class PostsController {
   @Patch()
   public updatePost(@Body() patchPostDto: PatchPostDto) {
     console.log(patchPostDto)
+  }
+
+  @Delete()
+  public deletePost(@Query('id', ParseIntPipe) id: number) {
+    return this.postsService.delete(id)
   }
 }
