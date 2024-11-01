@@ -26,9 +26,15 @@ export class PostsService {
   ) {}
   public async create(@Body() createPostsDto: CreatePostDto) {
     /**
+     * Find posts by author
+     */
+    const author = await this.usersService.findUserById(
+      createPostsDto.authorId,
+    );
+    /**
      * Create a new post
      */
-    const post = this.postsRepository.create(createPostsDto);
+    const post = this.postsRepository.create({ ...createPostsDto, author });
 
     /**
      * return post
@@ -36,12 +42,11 @@ export class PostsService {
     return await this.postsRepository.save(post);
   }
   public async findAll(userId: string) {
-    const user = this.usersService.findUserById(userId);
-
     const posts = await this.postsRepository.find({
       relations: {
-        metaOptions: true
-      }
+        metaOptions: true,
+        author: true
+      },
     });
 
     return posts;

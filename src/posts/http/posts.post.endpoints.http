@@ -4,7 +4,7 @@ Content-Type: application/json
 {
     "title": "What's new in nestjs",
     "postType": "post",
-    "slug": "whats-new-in-nestjs",
+    "slug": "whats-new-in-nestjs-1",
     "status": "draft",
     "content": "Nestjs has so many features that can make programming a lot easier for you",
     "schemas": "{\r\n \"@context\": \"https:\/\/schemas.org\",\r\n \"@type\": \"Person\"\r\n }",
@@ -13,6 +13,7 @@ Content-Type: application/json
     // "tags": ["nestjs", "typescript"],
     "metaOptions": {
         "metaValue": "{\"sidebarEnabled\": true, \"footerActive\": true}"
-    }
+    },
+    "authorId": 1
 
 }

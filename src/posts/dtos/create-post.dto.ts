@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsISO8601, IsJSON, IsNotEmpty, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsEnum, IsInt, IsISO8601, IsJSON, IsNotEmpty, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { postStatus } from "../enums/postStatus.enum";
 import { postType } from "../enums/postType.enum";
 import { Type } from "class-transformer";
@@ -43,6 +43,7 @@ export class CreatePostDto {
     @IsEnum(postStatus)
     @IsNotEmpty()
     status: postStatus;
+    
     @ApiPropertyOptional({
         description: 'This is the content of the post',
         example: 'Welcome, here we go....'
@@ -104,4 +105,13 @@ export class CreatePostDto {
     @ValidateNested({ each: true })
     @Type(() => CreatePostMetaOptionsDto)
     metaOptions: CreatePostMetaOptionsDto | null;
+
+    @ApiProperty({
+        type: "integer",
+        required: true,
+        example: 1
+    })
+    @IsNotEmpty()
+    @IsInt()
+    authorId: number;
 }
