@@ -78,16 +78,6 @@ export class CreatePostDto {
     publishOn?: Date;
 
     @ApiPropertyOptional({
-        description: 'This is an array of tags for the blog post',
-        example: ['tag1', 'tag2', 'tag3']
-    })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
-    @MinLength(3, { each: true })
-    tags?: string[];
-    
-    @ApiPropertyOptional({
         type: 'object',
         required: false,
         items: {
@@ -105,7 +95,7 @@ export class CreatePostDto {
     @ValidateNested({ each: true })
     @Type(() => CreatePostMetaOptionsDto)
     metaOptions: CreatePostMetaOptionsDto | null;
-
+    
     @ApiProperty({
         type: "integer",
         required: true,
@@ -114,4 +104,13 @@ export class CreatePostDto {
     @IsNotEmpty()
     @IsInt()
     authorId: number;
+
+    @ApiPropertyOptional({
+        description: 'An array of ids of numbers',
+        example: [1, 2]
+    })
+    @IsOptional()
+    @IsArray()
+    @IsInt({ each: true })
+    tags?: number[]
 }

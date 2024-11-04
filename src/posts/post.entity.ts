@@ -1,24 +1,34 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { postType } from './enums/postType.enum';
 import { postStatus } from './enums/postStatus.enum';
 import { CreatePostMetaOptionsDto } from '../meta-options/dtos/create-post-meta-options-dto';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity()
 export class Post {
-    @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 512,
     nullable: false,
   })
   title: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: postType,
     nullable: false,
     default: postType.POST,
@@ -26,14 +36,14 @@ export class Post {
   postType: postType;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 256,
     nullable: false,
   })
   slug: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: postStatus,
     nullable: false,
     default: postStatus.DRAFT,
@@ -41,44 +51,41 @@ export class Post {
   status: postStatus;
 
   @Column({
-    type: "text",
+    type: 'text',
     nullable: true,
   })
   content?: string;
 
   @Column({
-    type: "text",
+    type: 'text',
     nullable: true,
   })
   schemas?: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 1024,
     nullable: true,
   })
   featuredImageUrl?: string;
 
   @Column({
-    type: "timestamp",
+    type: 'timestamp',
     nullable: true,
   })
   publishOn?: Date;
 
-  @Column({
-    type: "varchar",
-    nullable: true,
-  })
-  tags?: string[];
-
-//   Work on it in the next session
-  @OneToOne(() => MetaOption, (metaOptions) => metaOptions.post,
-  {
+  //   Work on it in the next session
+  @OneToOne(() => MetaOption, (metaOptions) => metaOptions.post, {
     cascade: true,
-    eager: true
+    eager: true,
   })
   metaOptions?: MetaOption;
 
   @ManyToOne(() => User, (user) => user.posts)
-  author: User
+  author: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts)
+  @JoinTable()
+  tags?: Tag[];
 }
