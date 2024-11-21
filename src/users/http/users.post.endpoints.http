@@ -7,3 +7,22 @@ Content-Type: application/json
     "email": "john.doe@example.com",
     "password": "Password123#"
 }
+
+POST http://localhost:3000/users/create-many
+Content-Type: application/json
+{
+  "users": [
+    {
+    "firstName": "Luke",
+    "lastName": "Doe",
+    "email": "Luke.doe@example.com",
+    "password": "Password123#"
+},
+{
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "email": "Jane.doe@example.com",
+    "password": "Password123#"
+}
+  ]  
+}

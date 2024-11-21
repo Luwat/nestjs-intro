@@ -1,4 +1,10 @@
-import { Body, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  HttpStatus,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/providers/users.service';
 import { Post } from '../post.entity';
@@ -56,12 +62,42 @@ export class PostsService {
   }
 
   public async update(patchPostDto: PatchPostDto) {
+    let tags = undefined;
+    let post = undefined
+    
     // Find tags
-    const tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    try {
+      tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    } catch (error) {
+      /**
+       * Throw exception
+       */
+      throw new RequestTimeoutException(
+        'Unable to get tags from the database. Please try again later.',
+      );
+    }
+
+    if (!tags || tags.length !== patchPostDto.tags.length) {
+      throw new BadRequestException("Tags do not match the provided tags in the request.");
+    }
+
     // Find the post
-    const post = await this.postsRepository.findOneBy({
-      id: patchPostDto.id,
-    });
+    try {
+      
+      await this.postsRepository.findOneBy({
+        id: patchPostDto.id,
+      });
+
+    } catch (error) {
+      /**Throw exception */
+      throw new RequestTimeoutException(
+        'Unable to get post from the database. Please try again later.',
+      );
+    }
+
+    if (!post) {
+      throw new BadRequestException("Post does not exist. Check the ID and try again.");
+    }
     // Update post
     post.title = patchPostDto.title ?? post.title;
     post.postType = patchPostDto.postType ?? post.postType;
@@ -76,7 +112,14 @@ export class PostsService {
     // Assign new tags
     post.tags = tags;
     // Save the post and return
-    return await this.postsRepository.save(post);
+    try {
+      await this.postsRepository.save(post);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to update post. Please try again later.',
+      );
+    }
+    return post;
   }
   public async findAll(userId: string) {
     const posts = await this.postsRepository.find({
