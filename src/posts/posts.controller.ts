@@ -3,6 +3,7 @@ import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
+import { GetPostDto } from './dtos/get-post.dto';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -14,8 +15,8 @@ export class PostsController {
 
 // get all user's posts by userId
   @Get('/:userId?')
-  public getPosts(@Param() userId: string) {
-    return this.postsService.findAll(userId)
+  public getPosts(@Param() userId: string, @Query() postQuery: GetPostDto) {
+    return this.postsService.findAll(postQuery, userId)
   }
 
   @ApiOperation({

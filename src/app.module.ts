@@ -13,6 +13,7 @@ import { config } from 'dotenv';
 import appConfig from "./config/app.config"
 import databaseConfig from './config/database.config';
 import { environmentValidation } from './config/environment.validation';
+import { PaginationModule } from './common/pagination/pagination.module';
 
 // config({path: '.env' });
 config({path: '.env.development' });
@@ -47,6 +48,7 @@ const ENV = process.env.NODE_ENV;
     }),
     TagsModule,
     MetaOptionsModule,
+    PaginationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
