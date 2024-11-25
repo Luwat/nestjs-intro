@@ -14,6 +14,8 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { GetPostDto } from '../dtos/get-post.dto';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
+import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
 
 @Injectable()
 export class PostsService {
@@ -37,6 +39,11 @@ export class PostsService {
      * Inject Tag service
      */
     private readonly tagsService: TagsService,
+
+    /**
+     * Injecting paginationProvider
+     */
+    private readonly paginationProvider: PaginationProvider,
   ) {}
   public async create(@Body() createPostsDto: CreatePostDto) {
     /**
@@ -122,16 +129,11 @@ export class PostsService {
     }
     return post;
   }
-  public async findAll(postQuery: GetPostDto, userId: string) {
-    const posts = await this.postsRepository.find({
-      relations: {
-        metaOptions: true,
-        author: true,
-        tags: true,
-      },
-      skip: (postQuery.page - 1) * postQuery.limit,
-      take: postQuery.limit
-    });
+  public async findAll(postQuery: GetPostDto, userId: string): Promise<Paginated<Post>> {
+    const posts = await this.paginationProvider.paginateQuery({
+      limit: postQuery.limit,
+      page: postQuery.page,
+    }, this.postsRepository)
 
     return posts;
   }
