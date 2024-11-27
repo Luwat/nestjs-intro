@@ -17,6 +17,7 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
+import { CreateUserProvider } from './create-user.provider'
 
 /**
  * Class that connects to the users endpoint
@@ -51,51 +52,19 @@ export class UsersService {
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
 
+    /**
+     * Inject create many provider
+     */
     private readonly usersCreateManyProvider: UsersCreateManyProvider,
+
+    /**
+     * Inject Create User Provider
+     */
+    private readonly createUserProvider: CreateUserProvider
   ) {}
 
   public createUser = async (createUserDto: CreateUserDto) => {
-    let existingUser = undefined;
-
-    try {
-      // check if user already exists
-      existingUser = await this.usersRepository.findOne({
-        where: {
-          email: createUserDto.email,
-        },
-      });
-    } catch (error) {
-      // Handle exceptions
-      throw new RequestTimeoutException(
-        'The request timed out, please try again later',
-        {
-          description: 'Error connecting to the database',
-        },
-      );
-    }
-
-    // handle exceptions
-    if (existingUser) {
-      throw new BadRequestException(
-        'The user already exists. Please check your email.',
-      );
-    }
-
-    // Create new user
-    let newUser = this.usersRepository.create(createUserDto);
-    
-    try {
-      newUser = await this.usersRepository.save(newUser);
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'The request timed out, please try again later',
-        {
-          description: 'Error connecting to the database',
-        },
-      );
-    }
-
-    return newUser;
+    return this.createUserProvider.createUser(createUserDto)
   };
 
   /**
