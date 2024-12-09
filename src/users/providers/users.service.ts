@@ -90,17 +90,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
-    throw new HttpException({
-      status: HttpStatus.MOVED_PERMANENTLY,
-      error: "Users does not exist"
-    },
-    HttpStatus.MOVED_PERMANENTLY,
-    {
-      cause: new Error(),
-      description: "Error Occurred because endpoint has been moved permanently",
-      
-    }
-  )
+   return this.usersRepository.find()
   }
 
   /**

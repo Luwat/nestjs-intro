@@ -1,19 +1,19 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImVtYWlsIjoibWFyay5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzM3MDM2NzUsImV4cCI6MTczMzcwNzI3NSwiYXVkIjoibG9jYWxob3N0OjMwMDAiLCJpc3MiOiJsb2NhbGhvc3Q6MzAwMCJ9.EwUZl-rnXm4tI2Nlqm8AhkjBam5vdSLGygKd1XIpoP0
 
 {
     "title": "What's new in nestjs",
     "postType": "post",
-    "slug": "whats-new-in-nestjs-4",
+    "slug": "whats-new-in-nestjs-5",
     "status": "draft",
     "content": "Nestjs has so many features that can make programming a lot easier for you",
     "schemas": "{\r\n \"@context\": \"https:\/\/schemas.org\",\r\n \"@type\": \"Person\"\r\n }",
     "featuredImageUrl": "http://localhost.com/assets/featured.png",
-    "publishOn": "2024-10-29T00:00:00Z",
+    // "publishOn": "2024-11-29T00:20:34Z",
     "metaOptions": {
         "metaValue": "{\"sidebarEnabled\": true, \"footerActive\": true}"
     },
-    "authorId": 1,
-    "tags": [1, 2]
+    "tags": [1]
 
 }
