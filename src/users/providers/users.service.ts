@@ -74,11 +74,6 @@ export class UsersService {
   };
 
   /**
-   * Checks if user is authenticated
-   */
-  public isAuth = this.authService.isAuth();
-
-  /**
    * The method to get all the users
    * @param getUsersParamDto
    * @param limit
