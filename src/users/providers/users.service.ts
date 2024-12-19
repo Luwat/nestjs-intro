@@ -5,7 +5,7 @@ import {
   Inject,
   Injectable,
   RequestTimeoutException,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 import { GetUsersParamDto } from '../dtos/get-users-param.dto';
 import { AuthService } from 'src/auth/providers/auth.service';
@@ -17,8 +17,11 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
-import { CreateUserProvider } from './create-user.provider'
+import { CreateUserProvider } from './create-user.provider';
 import { FindOneUserByEmailProvider } from './find-one-user-by-email.provider';
+import { FindOneByGoogleIdProvider } from './find-one-by-google-id.provider';
+import { GoogleUser } from '../interfaces/google-user.interface';
+import { CreateGoogleUserProvider } from './create-google-user.provider';
 
 /**
  * Class that connects to the users endpoint
@@ -66,11 +69,20 @@ export class UsersService {
     /**
      * Inject findOneByEmailProvider
      */
-    private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider
+    private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
+
+    /**
+     * Inject findOneByGoogleIdProvider
+     */
+    private readonly findOneByGoogleIdProvider: FindOneByGoogleIdProvider,
+    /**
+     * Inject createGoogleUserProvider
+     */
+    private readonly createGoogleUserProvider: CreateGoogleUserProvider,
   ) {}
 
   public createUser = async (createUserDto: CreateUserDto) => {
-    return this.createUserProvider.createUser(createUserDto)
+    return this.createUserProvider.createUser(createUserDto);
   };
 
   /**
@@ -85,7 +97,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
-   return this.usersRepository.find()
+    return this.usersRepository.find();
   }
 
   /**
@@ -98,7 +110,7 @@ export class UsersService {
     let user = undefined;
 
     try {
-      user = await this.usersRepository.findOneBy({ id })
+      user = await this.usersRepository.findOneBy({ id });
     } catch (error) {
       throw new RequestTimeoutException(
         'The request timed out, please try again later',
@@ -115,7 +127,7 @@ export class UsersService {
   }
 
   public async createMany(createManyUsersDto: CreateManyUsersDto) {
-    return this.usersCreateManyProvider.createManyUsers(createManyUsersDto)
+    return this.usersCreateManyProvider.createManyUsers(createManyUsersDto);
   }
 
   /**
@@ -123,5 +135,13 @@ export class UsersService {
    */
   public async findOneByEmail(email: string) {
     return await this.findOneUserByEmailProvider.findOneByEmail(email);
+  }
+
+  public async findOneByGoogleId(googleId: string) {
+    return await this.findOneByGoogleIdProvider.findOneByGoogleId(googleId);
+  }
+
+  public async createGoogleUser(googleUser: GoogleUser) {
+    return await this.createGoogleUserProvider.createGoogleUser(googleUser);
   }
 }
